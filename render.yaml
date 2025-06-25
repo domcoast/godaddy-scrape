@@ -1,0 +1,10 @@
+services:
+  - type: worker
+    name: selenium-docker-scraper
+    env: docker
+    dockerfilePath: ./Dockerfile  # Path to your Dockerfile
+    plan: free
+    # For one-time tasks, no need for restart policy
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"

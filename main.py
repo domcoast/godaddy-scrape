@@ -26,10 +26,8 @@ def main():
             uc=True, 
             headless=True,
             browser="chrome",
-            # Enhanced stealth options
-            chromium_arg="--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--disable-blink-features=AutomationControlled,--disable-extensions,--no-first-run,--disable-default-apps",
-            # Add realistic user agent and viewport
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            # Enhanced stealth options - including user agent in chromium_arg
+            chromium_arg="--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--disable-blink-features=AutomationControlled,--disable-extensions,--no-first-run,--disable-default-apps,--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
         )
         
         url = "https://auctions.godaddy.com/beta/findApiProxy/v4/aftermarket/find/auction/recommend?endTimeAfter=2025-06-16T06%3A59%3A09.972Z&experimentInfo=aftermarket-semantic-search-202502%3AB&paginationSize=1&paginationStart=0&query=bermudamasterworks.org&useExtRanker=true&useSemanticSearch=true"

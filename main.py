@@ -22,6 +22,12 @@ def setup_chrome():
 def run_scraper(domain_query: str) -> dict:
     setup_chrome()
 
+    # Proxy setup
+    proxy = "core-residential.evomi.com:1000"
+    proxy_user = "domaincoas3"
+    proxy_pass = "qjQDSiuIKepa9XVjiSzK"
+    proxy_auth = f"{proxy_user}:{proxy_pass}@{proxy}"
+
     driver = None
     try:
         url = (
@@ -39,6 +45,7 @@ def run_scraper(domain_query: str) -> dict:
             uc=True,
             headless=True,
             browser="chrome",
+            proxy=f"http://{proxy_auth}",
             chromium_arg="--no-sandbox,--disable-dev-shm-usage,--disable-gpu,"
                          "--disable-blink-features=AutomationControlled,"
                          "--disable-extensions,--no-first-run,--disable-default-apps,"
@@ -46,6 +53,7 @@ def run_scraper(domain_query: str) -> dict:
                          "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
         )
 
+        # Stealth patch
         driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
         driver.uc_open_with_reconnect(url, reconnect_time=6)
@@ -60,8 +68,12 @@ def run_scraper(domain_query: str) -> dict:
         page_title = driver.get_title()
         timestamp = driver.execute_script("return new Date().toISOString()")
 
-        # Send to webhook
+        # Send to webhook using proxy
         webhook_url = "https://n8n.scrapifyapi.com/webhook/fa92b96f-26c4-43aa-9e9c-acb43c6145ce"
+        proxies = {
+            "http": f"http://{proxy_auth}",
+            "https": f"http://{proxy_auth}",
+        }
         payload = {
             "screenshot": img_base64,
             "url": url,
@@ -70,7 +82,7 @@ def run_scraper(domain_query: str) -> dict:
             "status": "success"
         }
 
-        response = requests.post(webhook_url, json=payload, timeout=30)
+        response = requests.post(webhook_url, json=payload, timeout=30, proxies=proxies)
         if response.status_code != 200:
             raise Exception(f"Webhook failed with {response.status_code}: {response.text}")
 

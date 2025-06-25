@@ -2,3 +2,5 @@ seleniumbase
 selenium
 undetected-chromedriver
 requests
+fastapi
+uvicorn
